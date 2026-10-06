@@ -36,20 +36,15 @@ lemma cast_extreme (p : ℕ) (z : ℤ) (hz : z.natAbs=p) :
 
 /-- Every family of nonzero lattice offsets distinct up to sign has a periodic
 configuration that changes every pixel at each synchronous binary median step. -/
-theorem lattice_two_cycle {d : ℕ} {I : Type*} [Fintype I] [DecidableEq I] [Nonempty I]
-    (a : I→(Fin d→ℤ))
+theorem lattice_two_cycle_bounded {d : ℕ} {I : Type*} [Fintype I] [DecidableEq I] [Nonempty I]
+    (a : I→(Fin d→ℤ)) (M : ℕ) (hM : ∀ i j, |a i j|≤M)
     (ha : ∀ i, a i≠0)
     (hsep : ∀ i j, i≠j → a i≠a j ∧ a i≠ -a j) :
-    ∃ (N : ℕ) (x : (Fin d→ℤ)→Bool), 0<N ∧
+    ∃ (N : ℕ) (x : (Fin d→ℤ)→Bool), 2≤N ∧ N≤(2*M+1)^d-1 ∧
       (∀ v w, x (v+N • w)=x v) ∧
       (∀ v, median a x v = !x v) ∧
       (∀ v, median a (fun t => !x t) v = x v) := by
   classical
-  let M : ℕ := (Finset.univ.product Finset.univ).sup (fun ij : I×Fin d => (a ij.1 ij.2).natAbs)
-  have hM (i : I) (j : Fin d) : |a i j| ≤ (M:ℤ) := by
-    have hb : (a i j).natAbs ≤ M := Finset.le_sup (s := Finset.univ.product Finset.univ) (b := (i,j)) (f := fun ij : I×Fin d => (a ij.1 ij.2).natAbs) (Finset.mem_product.mpr ⟨Finset.mem_univ i,Finset.mem_univ j⟩)
-    rw [← Int.natCast_natAbs]
-    exact_mod_cast hb
   let L := encoding (2*(M:ℤ)+1) d
   let z : I→ℤ := fun i => L (a i)
   have hz (i) : z i≠0 := by
@@ -81,7 +76,16 @@ theorem lattice_two_cycle {d : ℕ} {I : Type*} [Fintype I] [DecidableEq I] [Non
     simp [field,x,q,map_add,map_sub]
   have pull' (v) : field a (fun t => !x t) v = field q (fun t => !y t) (Q v) := by
     simp [field,x,q,map_add,map_sub]
-  refine ⟨2*p,x,by omega,?_,?_,?_⟩
+  have hbound : 2*p≤(2*M+1)^d-1 := by
+    have hb := encode_bound M (a e) (hM e)
+    have hab : |encode (2*(M:ℤ)+1) (a e)|=(p:ℤ) := by
+      rw [← Int.natCast_natAbs]; rfl
+    rw [hab] at hb
+    have hb' : (2*p+1 : ℕ) ≤ (2*M+1)^d := by
+      have hi : (2*(p:ℤ)+1)≤(2*(M:ℤ)+1)^d := by linarith
+      exact_mod_cast hi
+    omega
+  refine ⟨2*p,x,by omega,hbound,?_,?_,?_⟩
   · intro v w
     dsimp [x]
     rw [map_add,map_nsmul]
@@ -90,6 +94,23 @@ theorem lattice_two_cycle {d : ℕ} {I : Type*} [Fintype I] [DecidableEq I] [Non
     rw [hperiod,add_zero]
   · intro v; simpa only [median, pull] using hy (Q v)
   · intro v; simpa only [median, pull'] using hy' (Q v)
+
+/-- Existence without requiring a coordinate bound as input. -/
+theorem lattice_two_cycle {d : ℕ} {I : Type*} [Fintype I] [DecidableEq I] [Nonempty I]
+    (a : I→(Fin d→ℤ)) (ha : ∀ i, a i≠0)
+    (hsep : ∀ i j, i≠j → a i≠a j ∧ a i≠ -a j) :
+    ∃ (N : ℕ) (x : (Fin d→ℤ)→Bool), 0<N ∧
+      (∀ v w, x (v+N • w)=x v) ∧
+      (∀ v, median a x v = !x v) ∧
+      (∀ v, median a (fun t => !x t) v = x v) := by
+  classical
+  let M : ℕ := (Finset.univ.product Finset.univ).sup (fun ij : I×Fin d => (a ij.1 ij.2).natAbs)
+  have hM (i : I) (j : Fin d) : |a i j| ≤ (M:ℤ) := by
+    have hb : (a i j).natAbs ≤ M := Finset.le_sup (s := Finset.univ.product Finset.univ) (b := (i,j)) (f := fun ij : I×Fin d => (a ij.1 ij.2).natAbs) (Finset.mem_product.mpr ⟨Finset.mem_univ i,Finset.mem_univ j⟩)
+    rw [← Int.natCast_natAbs]
+    exact_mod_cast hb
+  obtain ⟨N,x,hN,_,hper,hflip,hback⟩ := lattice_two_cycle_bounded a M hM ha hsep
+  exact ⟨N,x,by omega,hper,hflip,hback⟩
 
 /-- The two configurations in the theorem are different. -/
 theorem complement_ne {d : ℕ} (x : (Fin d→ℤ)→Bool) : (fun v => !x v)≠x := by

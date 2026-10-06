@@ -18,9 +18,8 @@ We revisit the August 2026 archived antipodal-cut construction for
 nontrivial centered symmetric median masks on $\Z^d$. Its convex-geometric
 separation step can be replaced by a balanced-base encoding of integer
 coordinates. This gives a complete elementary proof and an explicit bound
-on a spatial period. The existence statement is formalized end to end in Lean 4. The explicit
-period and flip-count bounds below are proved on paper and are outside the
-current Lean endpoint. Literature priority remains unconfirmed.
+on a spatial period. The existence statement, explicit spatial-period bound, and improving-flip
+bound are formalized in Lean 4. Literature priority remains unconfirmed.
 \end{abstract}
 
 \section{Statement and scope}
@@ -180,14 +179,20 @@ The new Lean development proves the existence statement end to end,
 starting with integer-lattice offsets. It checks balanced-base injectivity,
 the exact antipodal energy change, a finite minimizing coloring, the cyclic
 median update, and the periodic lattice pullback. The endpoint
-\texttt{MedianCycles.periodic\_median\_two\_cycle} explicitly asserts
+\texttt{MedianCycles.periodic\_median\_two\_cycle\_bounded} asserts the
+spatial-period bound as well as
 $F_W(F_W(x))=x$, $F_W(x)\ne x$, and $F_W(x)=-x$.
 It is checked with Lean 4.34.0 and mathlib commit
 \texttt{5ed2965256430c3649e86755f9576b54eca72435}.
 Its only axiom dependencies are the standard \texttt{propext},
 \texttt{Classical.choice}, and \texttt{Quot.sound}.
-The explicit period estimate and improving-flip bound in this note are
-not part of the current Lean endpoint. This is kernel checking by Lean,
+The separate endpoint
+\texttt{MedianCycles.cyclic\_improving\_flip\_bound} bounds the length of
+any actual sequence of antipodal flips satisfying $c(t)<r-1$. Its proof
+relates the disagreement count to integer energy, proves a drop of at
+least eight per improving flip, and bounds the total available energy
+range. Both quantitative bounds in this note are therefore checked in Lean.
+This is kernel checking by Lean,
 not an independent-kernel audit. Source and public build records are at
 \url{https://github.com/MathIsEvenEasier/median-cycles}.
 

@@ -6,7 +6,7 @@ work=pathlib.Path(sys.argv[1]).resolve()
 if not pathlib.Path('/run/mathiseasy-azure-verified').is_file():
     raise SystemExit('Use the bounded Azure worker; this script refuses local compilation.')
 proof=work/'median-rebuild-output';proof.mkdir(exist_ok=False)
-modules='Projection Antipodal Cyclic Lattice Result Audit'.split()
+modules='Projection Antipodal Cyclic Lattice Result FlipBound Audit'.split()
 records=[]
 for source in (root/'formal').glob('*.lean'):
     text=source.read_text()
@@ -33,7 +33,7 @@ try:
         elif p.returncode:raise RuntimeError('Positive module failed: '+module)
         if module=='Audit':
             entries=re.findall(r"'([^']+)' (?:depends on axioms: \[(.*?)\]|does not depend on any axioms)",log,re.S)
-            if len(entries)!=6:raise RuntimeError('Incomplete declaration audit')
+            if len(entries)!=10:raise RuntimeError('Incomplete declaration audit')
             for name,axioms in entries:
                 if set(a.strip() for a in axioms.split(',') if a.strip())-{'propext','Classical.choice','Quot.sound'}:
                     raise RuntimeError('Unexpected axiom: '+name)

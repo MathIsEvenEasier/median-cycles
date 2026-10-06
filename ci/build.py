@@ -45,10 +45,11 @@ provenance['source_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() f
 proof_dir=work/'median-rebuild-output'
 try:
     run(['python3','-u',str(root/'scripts/rebuild.py'),str(work)],work,timeout=1800)
-    module,theorem='Result','MedianCycles.periodic_median_two_cycle'
+    module,theorem='Result','MedianCycles.periodic_median_two_cycle_bounded'
+    flip_theorem='MedianCycles.cyclic_improving_flip_bound'
     query=proof_dir/'PublicFinalAudit.lean'
-    query.write_text('import '+module+'\n#print axioms '+theorem+'\n#check '+theorem+'\n')
-    output=run(['lake','env','lean','-j1','-M18000','-DElab.async=false',str(query)],work,timeout=600,
+    query.write_text('import '+module+'\nimport FlipBound\n#print axioms '+theorem+'\n#check '+theorem+'\n#print axioms '+flip_theorem+'\n#check '+flip_theorem+'\n')
+    output=run(['lake','env','lean','-j1','-M6000','-DElab.async=false',str(query)],work,timeout=180,
         env=dict(os.environ,LEAN_PATH=str(proof_dir)),capture=True)
     print('\nFINAL THEOREM AND AXIOMS\n'+output,flush=True)
     (out/'final-axioms.txt').write_text(output)
@@ -56,7 +57,12 @@ try:
     if not m: raise RuntimeError('Final axiom output missing')
     axioms=sorted(a.strip() for a in m[1].split(',') if a.strip())
     if set(axioms)-{'propext','Classical.choice','Quot.sound'}: raise RuntimeError('Unapproved final axiom')
-    provenance.update(status='VERIFIED',final_theorem=theorem,axioms=axioms)
+    mf=re.search(re.escape("'"+flip_theorem+"'")+r' depends on axioms: \[(.*?)\]',output,re.S)
+    if not mf: raise RuntimeError('Flip-bound axiom output missing')
+    flip_axioms=sorted(a.strip() for a in mf[1].split(',') if a.strip())
+    if set(flip_axioms)-{'propext','Classical.choice','Quot.sound'}: raise RuntimeError('Unapproved flip-bound axiom')
+    provenance.update(status='VERIFIED',final_theorem=theorem,axioms=axioms,
+        flip_bound_theorem=flip_theorem,flip_bound_axioms=flip_axioms)
 except BaseException:
     provenance['status']='FAILED'
     raise

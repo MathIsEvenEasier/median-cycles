@@ -165,3 +165,13 @@ MedianCycles.periodic_median_two_cycle, with only propext, Classical.choice,
 and Quot.sound. The earlier checkpoint above remains a dated record of
 what had been checked at that time. Quantitative period and flip bounds
 remain written results outside the current Lean endpoint.
+
+Quantitative formalization update — 6 October 2026
+--------------------------------------------------
+
+The explicit spatial period interval 2 <= N <= (2M+1)^d - 1 and the bound
+floor(p*(r-1)/2) for every actual improving antipodal-flip sequence have
+now also passed Lean checking in Azure. The earlier scope limitation in
+this dated checkpoint is superseded. The extended endpoints are
+periodic_median_two_cycle_bounded and cyclic_improving_flip_bound; their
+dependencies are still only propext, Classical.choice, and Quot.sound.

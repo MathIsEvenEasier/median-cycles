@@ -23,6 +23,12 @@ such that F(x) is its pointwise complement. Consequently F(F(x))=x and
 F(x) differs from x at every pixel. Wrapped samples retain their
 multiplicity when offsets coincide on the finite torus.
 
+If every coordinate has absolute value at most M, the period satisfies
+``2 <= N <= (2M+1)^d - 1``. Write N=2p and let r be the number of offset
+pairs. Any sequence of improving antipodal flips has at most
+``floor(p*(r-1)/2)`` steps. Both bounds are included in Lean. The spatial
+bound is an upper bound, not a claim that the period is minimal.
+
 Proof
 -----
 
@@ -45,18 +51,24 @@ Lean sources
 ``Antipodal.lean`` proves the exact energy change and existence of a minimum.
 ``Cyclic.lean`` constructs the antipodal state and applies the actual median.
 ``Lattice.lean`` selects the extreme offset and proves the periodic pullback.
-``Result.lean`` states the genuine two-cycle of the lattice operator.
+``Result.lean`` states the genuine two-cycle, including its spatial-period bound.
+``FlipBound.lean`` proves the energy range, the exact drop of an improving
+flip, and the bound for any actual sequence of such flips. Its ``S.card``
+is the number r-1 of remaining offset pairs.
 
-The full existence theorem passed Lean checking in a bounded Azure
-session on 6 October 2026. Its dependencies are exactly the standard
-``propext``, ``Classical.choice``, and ``Quot.sound``. There are no project
-postulates, proof holes, native decision shortcuts, or unsafe declarations.
-A separate public build from this repository is being prepared; its
-workflow link and permanent evidence will be recorded below.
+The full existence theorem and both quantitative bounds passed Lean
+checking in bounded Azure sessions on 6 October 2026. Their dependencies
+are exactly the standard ``propext``, ``Classical.choice``, and ``Quot.sound``.
+There are no project postulates, proof holes, native decision shortcuts,
+or unsafe declarations.
 
-The written note also gives an explicit spatial-period upper bound and a
-bound on improving flips. Those quantitative refinements are separate
-from the Lean existence theorem; the public audit states its exact scope.
+The initial existence-only public build succeeded:
+https://github.com/MathIsEvenEasier/median-cycles/actions/runs/37494646351
+A new public build is being prepared for the extended statements.
+
+The primary endpoints are ``MedianCycles.periodic_median_two_cycle_bounded``
+and ``MedianCycles.cyclic_improving_flip_bound``. The build prints both
+complete statements and their axiom dependencies.
 
 Reproducibility
 ---------------

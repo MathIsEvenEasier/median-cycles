@@ -58,4 +58,18 @@ theorem encode_injective_box (M : ℕ) {d : ℕ} (u v : Fin d → ℤ)
       nlinarith
     funext j
     refine Fin.cases hhead (fun k => congrFun htail k) j
+/-- Quantitative balanced-base bound, including the zero-dimensional case. -/
+theorem encode_bound (M : ℕ) {d : ℕ} (u : Fin d→ℤ) (hu : ∀ j, |u j|≤M) :
+    2*|encode (2*(M:ℤ)+1) u| ≤ (2*(M:ℤ)+1)^d-1 := by
+  induction d with
+  | zero => simp [encode]
+  | succ d ih =>
+    have ht := ih (fun j => u j.succ) (fun j => hu j.succ)
+    have hB : 0≤2*(M:ℤ)+1 := by omega
+    have hb := mul_le_mul_of_nonneg_left ht hB
+    have ha := abs_add_le (u 0) ((2*(M:ℤ)+1)*encode (2*(M:ℤ)+1) (fun j => u j.succ))
+    rw [abs_mul, abs_of_nonneg hB] at ha
+    have hhead := hu 0
+    simp only [encode, pow_succ]
+    nlinarith
 end MedianCycles
