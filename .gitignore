@@ -1,0 +1,13 @@
+.lake/
+*.olean
+*.ilean
+*.trace
+__pycache__/
+ci-output/
+rebuild-output/
+ci/azure/runs/
+*.aux
+*.log
+*.out
+*.pdf
+.DS_Store

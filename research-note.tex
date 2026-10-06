@@ -1,0 +1,216 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\sgn}{\operatorname{sgn}}
+\title{Periodic two-cycles for every symmetric median mask\\
+\large An elementary projection and an explicit period bound}
+\author{MathIsEvenEasier\\\small Prepared with OpenAI Codex (GPT-6 Astra)}
+\date{6 October 2026 --- research draft}
+\begin{document}
+\maketitle
+\begin{abstract}
+We revisit the August 2026 archived antipodal-cut construction for
+nontrivial centered symmetric median masks on $\Z^d$. Its convex-geometric
+separation step can be replaced by a balanced-base encoding of integer
+coordinates. This gives a complete elementary proof and an explicit bound
+on a spatial period. The existence statement is formalized end to end in Lean 4. The explicit
+period and flip-count bounds below are proved on paper and are outside the
+current Lean endpoint. Literature priority remains unconfirmed.
+\end{abstract}
+
+\section{Statement and scope}
+Let $d\ge1$ and let
+\[
+ W=\{0\}\cup\{\pm a_1,\ldots,\pm a_r\}\subset\Z^d,
+ \qquad r\ge1,
+\]
+where the $a_i$ are nonzero and distinct up to sign. For
+$x:\Z^d\to\{-1,1\}$, the synchronous binary median is
+\[
+ F_W(x)(v)=\sgn\left(x(v)+\sum_{i=1}^r
+                 (x(v+a_i)+x(v-a_i))\right).
+\]
+There are $2r+1$ samples, so the sum never vanishes.
+
+\begin{theorem}\label{thm:main}
+Every such mask admits a coordinate-periodic configuration $x$ with
+$F_W(x)=-x$. If every coordinate of every $a_i$ has absolute value at most
+$M\ge1$, then a common coordinate period $N$ can be chosen with
+\[
+             2\le N\le (2M+1)^d-1.
+\]
+Thus $x,-x$ form a genuine temporal two-cycle.
+\end{theorem}
+
+The period $N$ need not be minimal. The theorem concerns existence on
+some finite torus, or equivalently a periodic image on the infinite lattice.
+It makes no assertion for every prescribed image size, asymmetric masks,
+weighted masks, or fixed-zero, reflected, or replicated boundary rules.
+It addresses the centered-symmetric, periodic subclass of Klette's
+Problem 3~\cite{klette}, rather than the entire characterization question.
+
+\section{The elementary projection}
+\begin{lemma}\label{lem:encode}
+Set $B=2M+1$ and
+$\ell(v)=\sum_{j=0}^{d-1} B^j v_j$.
+Then $\ell$ is injective on the integer box $[-M,M]^d$.
+Consequently the positive numbers $|\ell(a_i)|$ are pairwise distinct.
+\end{lemma}
+\begin{proof}
+For distinct $u,v$ in the box, let $k$ be the largest index for which
+$u_k\ne v_k$. The leading term has absolute value at least $B^k$, whereas
+\[
+ \left|\sum_{j<k}B^j(u_j-v_j)\right|
+ \le 2M\sum_{j<k}B^j=B^k-1.
+\]
+Therefore $\ell(u)-\ell(v)\ne0$. Apply this to $0,a_i,-a_i$ and
+to pairs $a_i,\pm a_j$ to obtain the last assertion.
+\end{proof}
+
+Relabel and orient the representatives so that
+\[
+ p=\ell(a_r)=\max_i|\ell(a_i)|>0,
+ \qquad q_i=\ell(a_i),\quad 0<|q_i|<p\quad(i<r).
+\]
+Also $p\le M\sum_{j<d}B^j=(B^d-1)/2$. No exposing vertex or
+rational-separation theorem is needed.
+
+\section{Antipodal cut and majority}
+Work in $C=\Z/(2p\Z)$. Choose a coloring $y:C\to\{-1,1\}$ satisfying
+\[
+                 y(t+p)=-y(t)
+\]
+which maximizes the integer potential
+\[
+ \Phi(y)=\sum_{i<r}\sum_{t\in C}
+                    \mathbf 1_{y(t)\ne y(t+q_i)}.
+\]
+The choices are nonempty and finite: one sign is free at each of the $p$
+antipodal pairs. Edge labels $(i,t)$ are retained throughout.
+For each $t$, let
+\[
+ c(t)=\sum_{i<r}\left(
+  \mathbf 1_{y(t)\ne y(t+q_i)}+
+  \mathbf 1_{y(t)\ne y(t-q_i)}\right).
+\]
+
+\begin{lemma}\label{lem:flip}
+At such a maximum, $c(t)\ge r-1$ for every $t\in C$.
+\end{lemma}
+\begin{proof}
+Translate by $p$: both endpoint signs reverse, so $c(t+p)=c(t)$.
+No remaining edge is a loop or joins an antipodal pair, since
+$0<|q_i|<p$. For a fixed label $i$, the incoming and outgoing edge at a
+vertex are distinct, since $2q_i\not\equiv0\pmod{2p}$.
+Thus exactly $4(r-1)$ labeled edges meet the pair $\{t,t+p\}$, of which
+$2c(t)$ are cut. Flipping both signs preserves antipodality and toggles
+exactly those edges. The potential change is
+\[
+       \Delta\Phi=4(r-1)-4c(t).
+\]
+Maximality makes this nonpositive, proving the claim.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Define $x(v)=y(\ell(v)\bmod 2p)$. This has common coordinate period
+$N=2p$. The two samples at $v\pm a_r$ both project to the antipode of
+$\ell(v)$, so both disagree with $x(v)$. Lemma~\ref{lem:flip} supplies at
+least $r-1$ further disagreements. Hence at least $r+1$ of the $2r+1$
+samples disagree with the center, proving $F_W(x)=-x$.
+The operator commutes with sign reversal, whence $F_W(-x)=x$.
+Finally $x\ne-x$ and $2p\le B^d-1$.
+\end{proof}
+
+\section{Constructivity and finite images}
+The maximizing coloring need not be found by exhaustive search. Begin with
+any antipodal coloring and flip a pair with $c(t)<r-1$. Each flip increases
+$\Phi$ by at least four; since $0\le\Phi\le2p(r-1)$, there are at most
+\[
+                   \left\lfloor\frac{p(r-1)}2\right\rfloor
+\]
+improving flips. This gives a finite constructive procedure. It is not a
+polynomial-time claim in the binary input length: $p$ can be large compared
+with the bit length of the coordinates.
+
+The witness is represented by $2p$ signs and the linear map $\ell$; it need
+not be expanded into an $(2p)^d$ array. On a torus of side $2p$, different
+mask offsets may coincide, and all samples must still be counted. If one
+requires distinct finite-image neighbors, choose any side length $L$ that
+is a multiple of $2p$ and satisfies $L>2M$. The same witness then descends
+to that torus with all mask offsets distinct.
+
+For the simple mask $\{0,\pm1,\pm2\}$, the repeated binary word $0011$
+maps to $1100$ and back. The theorem gives such an oscillating test input
+for every allowed mask. Consequently an iteration loop which stops only
+when two consecutive images agree is not guaranteed to terminate under
+circular boundary conditions. Comparing with the image two steps earlier
+also detects the cycles, although it does not by itself select a preferred
+denoised image.
+
+\section{Known upper bound on temporal periods}
+The classical symmetric-threshold period-two phenomenon is background,
+not a new result of this note; see, for example, the discussion and
+references in~\cite{goles}. For completeness, on any fixed finite torus
+let $A$ be the symmetric sample-count matrix and put $x_{t+1}=\sgn(Ax_t)$.
+The integer energy $E_t=x_{t+1}^{T}Ax_t$ satisfies
+\[
+ E_t-E_{t-1}
+ =\sum_v (x_{t+1}(v)-x_{t-1}(v))(Ax_t)(v)\ge0.
+\]
+Each changed coordinate contributes $2|(Ax_t)(v)|\ge2$, since the row
+sample count is odd. Energy is bounded, so eventually $x_{t+1}=x_{t-1}$.
+Thus every finite-image trajectory eventually has temporal period one or
+two. Theorem~\ref{thm:main} supplies existence of period two on a suitable
+torus for every nontrivial mask; the mask $\{0\}$ is the identity.
+
+\section{Research status}
+The antipodal-cut existence argument comes from the supplied research
+archive dated 21 August 2026. This revision replaces its convex-geometric
+projection step by Lemma~\ref{lem:encode}, extracts the explicit spatial
+period and flip-count bounds, and clarifies the finite-image conventions.
+These are refinements of that argument, not a claim to have discovered
+the archived existence theorem today.
+
+The new Lean development proves the existence statement end to end,
+starting with integer-lattice offsets. It checks balanced-base injectivity,
+the exact antipodal energy change, a finite minimizing coloring, the cyclic
+median update, and the periodic lattice pullback. The endpoint
+\texttt{MedianCycles.periodic\_median\_two\_cycle} explicitly asserts
+$F_W(F_W(x))=x$, $F_W(x)\ne x$, and $F_W(x)=-x$.
+It is checked with Lean 4.34.0 and mathlib commit
+\texttt{5ed2965256430c3649e86755f9576b54eca72435}.
+Its only axiom dependencies are the standard \texttt{propext},
+\texttt{Classical.choice}, and \texttt{Quot.sound}.
+The explicit period estimate and improving-flip bound in this note are
+not part of the current Lean endpoint. This is kernel checking by Lean,
+not an independent-kernel audit. Source and public build records are at
+\url{https://github.com/MathIsEvenEasier/median-cycles}.
+
+The original question~\cite{klette} was checked directly. Modern work on
+total cycles~\cite{goles} uses the same $F(x)=-x$ condition but does not
+supply the arbitrary-mask lattice construction in its inspected results.
+A recent complexity preprint~\cite{jain} was screened at abstract level
+only; its full text was not retrieved. A bounded search across related
+terminology and indexed GitHub, X, and VibeMathed results did not locate
+this exact universal theorem. This is not evidence sufficient to establish
+priority, nor an independent expert review.
+
+\begin{thebibliography}{9}
+\bibitem{klette} R. Klette (compiler), \emph{Open Problems in (Digital)
+Geometry}, Dagstuhl, March 2004, Problem 3, slide 4.
+\url{https://tc18.org/openProblems/Dagstuhl_2004.pdf}.
+\bibitem{goles} E. Goles, P. Montealegre, M. Rios-Wilson and S. Sene,
+\emph{Dynamical stability of threshold networks over undirected signed
+graphs}, arXiv:2309.01854, version 3, especially Section 3 and Lemma 2.
+\url{https://arxiv.org/html/2309.01854v3}.
+\bibitem{jain} S. Jain, F. Stephan and H. Tang,
+\emph{Strictly Unfriendly $k$-Partitions: Sharp Degree Thresholds and
+ETH-Based Lower Bounds}, arXiv:2610.04440, 3 October 2026.
+\url{https://arxiv.org/abs/2610.04440}.
+\end{thebibliography}
+\end{document}

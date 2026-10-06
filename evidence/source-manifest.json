@@ -1,0 +1,9 @@
+{
+  "Cyclic.lean": "2e141a2fafdd84ab0092679804e0cebeaf153dc9d752b7c920fd9ee7f1586d81",
+  "Antipodal.lean": "238beb4e337bd4f2c21c7808e5060ccfb60b7ecd2233e6a43e9b7bb499844632",
+  "Audit.lean": "c6d18917e8a61bd25b64aa1be2cca96d67f7b6353af0738f488c25d68a1ce024",
+  "Result.lean": "200a06f42e07bf85bc2ef3d683b6e995008cd75b6dc88c35cb9ed9c6fedfe7cf",
+  "Projection.lean": "948e03ff3b15d579c73d0349b65004d10b1e356fb7e52969e03d2ddbcd864ef4",
+  "Lattice.lean": "86174629b952a3cb18a25f4f238452bf43cfc4cae857d0aab3d87141070bfb0d",
+  "NegativeControl.lean": "2f516933a59a4daf1d68ee6e93dfda81108cc66ae658e0fe3da0ffbf558388e9"
+}
