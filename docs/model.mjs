@@ -2,10 +2,8 @@ export const presets = [
   {name: 'Mixed offsets · 3D', pairs: [[1,0,0],[0,1,0],[-2,-2,1],[2,0,0],[0,2,0],[2,-2,0]]},
   {name: 'Offsets 1, 2, 4 · 1D', pairs: [[1],[2],[4]]},
   {name: 'Mixed distances · 2D', pairs: [[1,0],[2,0],[0,2]]},
-  {name: 'Cross · 2D', pairs: [[1,0],[0,1]]},
   {name: 'Full 3 × 3 · 2D', pairs: [[1,0],[0,1],[1,1],[1,-1]]},
-  {name: 'Skew mask · 2D', pairs: [[2,-1],[1,2],[1,-1]]},
-  {name: 'Axis neighbors · 3D', pairs: [[1,0,0],[0,1,0],[0,0,1]]}
+  {name: 'Skew mask · 2D', pairs: [[2,-1],[1,2],[1,-1]]}
 ];
 export const mod = (a,n) => ((a%n)+n)%n;
 export function latticeValue(m,word,coordinates) {
