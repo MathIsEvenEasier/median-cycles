@@ -1,4 +1,5 @@
 export const presets = [
+  {name: 'Mixed offsets · 3D', pairs: [[1,0,0],[0,1,0],[-2,-2,1],[2,0,0],[0,2,0],[2,-2,0]]},
   {name: 'Offsets 1, 2, 4 · 1D', pairs: [[1],[2],[4]]},
   {name: 'Mixed distances · 2D', pairs: [[1,0],[2,0],[0,2]]},
   {name: 'Cross · 2D', pairs: [[1,0],[0,1]]},
@@ -14,6 +15,11 @@ export function comparePatterns(a,b) {
   if(a.every((v,t)=>v===b[t])) return 'identical';
   if(a.every((v,t)=>v===-b[t])) return 'complement';
   return 'different';
+}
+export function periodTwoObstruction(m) {
+  const evenPairs=m.pairs.filter(a=>a.every(v=>v%2===0));
+  const agreeing=1+2*evenPairs.length;
+  return {evenPairs,agreeing,total:2*m.r+1,locked:agreeing>m.r};
 }
 export function setup(pairs) {
   const d=pairs[0].length, r=pairs.length, M=Math.max(...pairs.flat().map(Math.abs)), B=2*M+1;

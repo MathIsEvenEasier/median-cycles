@@ -9,6 +9,14 @@ synchronous median update. Applying the filter twice recovers the image.
 shows the projection, antipodal improvements, sample votes, and periodic
 image. Its small browser examples are an illustration of the general proof.
 
+The featured 3D example has 13 samples. Every input periodic with period
+two in each coordinate is fixed, because six even-coordinate offsets and
+the center already supply seven agreeing votes. The construction instead
+finds a period-26 two-cycle after seven improving flips. The bounded check
+``python3 scripts/check-3d-example.py`` verifies its coordinate neighborhoods
+and all 256 repeating 2x2x2 blocks; ``node scripts/check-site.mjs`` checks
+the browser model against the Python fixtures.
+
 This repository records the centered symmetric periodic case of the
 median-cycle question. It does not characterize asymmetric masks, settle
 Klette's full Problem 3, or guarantee a cycle on every prescribed image

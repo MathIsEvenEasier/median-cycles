@@ -1,4 +1,4 @@
-import {presets,setup,construct,crossing,cut,samples,median,mod,latticeValue,comparePatterns} from './model.mjs';
+import {presets,setup,construct,crossing,cut,samples,median,mod,latticeValue,comparePatterns,periodTwoObstruction} from './model.mjs';
 const $=id=>document.getElementById(id);
 const svg=(tag,attrs,text)=>`<${tag} ${Object.entries(attrs).map(([k,v])=>`${k}="${v}"`).join(' ')}>${text??''}</${tag}>`;
 const sign=v=>v>0?'+':'−';
@@ -17,8 +17,12 @@ function wordRows(id,y){
 function renderComparison(){
   const y=trace.states.at(-1),alt=alternating(),[min,max]=voteRange(y),[opposing]=voteRange(alt),total=2*m.r+1,works=opposing>=m.r+1;
   const relation=comparePatterns(y,alt),same=relation==='identical';
+  const obstruction=periodTwoObstruction(m),motif=Array(m.d).fill('2').join(' × ');
   $('comparison-label').textContent=same?'The same filter, the same input':'Compare the two constructions';
   $('comparison-heading').textContent=same?'Here the construction gives exactly the checkerboard.':relation==='complement'?'Here the construction swaps the checkerboard colors.':'A checkerboard is not a universal answer.';
+  if(obstruction.locked)$('comparison-heading').textContent=m.d===1?'Every period-2 input gets stuck.':`Every repeating ${motif} block gets stuck.`;
+  $('period-two-obstruction').hidden=!obstruction.locked;
+  $('period-two-obstruction').innerHTML=obstruction.locked?`<strong>Why the obvious small patterns cannot work</strong><p>In any input repeating every 2 cells in each coordinate, an offset with all coordinates even returns the center’s color. This mask contains ${obstruction.evenPairs.map(a=>'±('+a.join(', ')+')').join(', ')}. Those ${2*obstruction.evenPairs.length} samples, together with the center, give <b>${obstruction.agreeing} agreeing votes out of ${obstruction.total}</b>: a strict majority. Every such input is a fixed point. This includes all checkerboards and stripes built from a repeating ${motif} block.</p><p>The construction below uses period ${m.N}. After ${trace.flips.length} improving flips, every point has ${min===max?min:`${min}–${max}`} opposing votes, so every point changes. A strict majority is enough; some neighbors may still agree with the center.</p>`:'';
   $('comparison-identity').hidden=relation==='different';
   $('comparison-identity').textContent=same?`The two cards below are identical. For this mask, the general construction ends at the ordinary checkerboard; both inputs and both outputs match. The displayed ${m.N}-entry word simply repeats the two-entry block 10.`:relation==='complement'?'The two patterns differ only by exchanging 0 and 1. They are the two phases of the same checkerboard cycle.':'';
   $('word-explanation').textContent=m.d===1?'Each row below is one spatial period of a one-dimensional input.':`The rows below show a one-dimensional encoding, not a ${m.d}D picture. The lattice color at (${m.d===3?'x, y, z':'x, y'}) is word[(${m.d===3?`x + ${m.B}y + ${m.B*m.B}z`:`x + ${m.B}y`}) mod ${m.N}]. ${m.d===3?'The three-layer view above shows the actual 3D configuration.':''}`;
@@ -32,7 +36,8 @@ function renderProjection(){
   $('projection-formula').textContent=`B = ${m.B}  ·  ℓ(v) = ${m.coefficients.map((c,j)=>`${c===1?'':c+'·'}v${'₀₁₂'[j]}`).join(' + ')}`;
   $('offset-table').innerHTML='<div class="offset-row offset-head"><span>offset a</span><span>ℓ(a)</span></div>'+m.pairs.map((a,i)=>`<div class="offset-row ${Math.abs(m.q[i])===m.p?'extreme':''}"><span>(${a.join(', ')})</span><span>${m.q[i]}</span></div>`).join('');
   $('projection-caption').textContent=`r = ${m.r} offset pairs; p = ${m.p}; N = ${m.N}. The orange row is the extreme pair. ${m.d===3?'The diagram uses an oblique view of the three coordinate axes; labels give projected offsets.':'The diagram includes the center and both signs of each offset.'}`;
-  const scale=76/m.M,extreme=m.q.findIndex(q=>Math.abs(q)===m.p);
+  const extent=m.d===3?Math.max(...m.pairs.map(a=>Math.max(Math.abs(a[0]-.55*a[1]),Math.abs(a[2]-.5*a[1])))):m.M;
+  const scale=76/extent,extreme=m.q.findIndex(q=>Math.abs(q)===m.p);
   let out='';
   if(m.d===3){
     out+=svg('path',{d:'M20 115H210M115 20V210M168 67L62 163',stroke:'#a2b59c',fill:'none'});
@@ -103,13 +108,15 @@ function renderVolume(){
     return `<div class="volume-layer"><strong>z = ${zLayer+dz}</strong><span>${dz<0?'Below':dz>0?'Above':'Central layer'}</span><div class="slice-grid" role="img" aria-label="Layer z equals ${zLayer+dz}. Central column value ${latticeValue(m,heroWord,[0,0,zLayer+dz])>0?1:0}. All cells are at the same time step ${generation}.">${cells}</div></div>`;
   }).join('');
   const offsets=[[0,0,0],...neighbors];
-  const neighborLabels=['Center','+x','−x','+y','−y','+z','−z'];
+  const neighborLabels=offsets.map((a,i)=>i===0?'Center':`(${a.map(v=>v<0?'−'+(-v):v).join(',')})`);
   const values=offsets.map(a=>latticeValue(m,heroWord,a.map((v,j)=>v+center[j])));
   const opposing=values.filter(v=>v!==centerValue).length;
   const inLayer=neighbors.filter((a,i)=>a[2]===0&&values[i+1]!==centerValue).length;
   const above=neighbors.filter((a,i)=>a[2]>0&&values[i+1]!==centerValue).length;
   const below=neighbors.filter((a,i)=>a[2]<0&&values[i+1]!==centerValue).length;
-  $('volume-votes').innerHTML=`<strong>Seven samples around (0, 0, ${zLayer})</strong><div class="voxel-votes">${values.map((v,i)=>`<span><small>${neighborLabels[i]}</small><b>${v>0?1:0}</b></span>`).join('')}</div><p>${opposing} of 7 oppose the center: ${inLayer} in its layer, ${above} above, and ${below} below. ${Math.sign(values.reduce((s,v)=>s+v,0))!==centerValue?'The voxel flips.':'The voxel stays the same.'}</p>`;
+  const layerValues=dz=>Array.from({length:25},(_,i)=>latticeValue(m,heroWord,[i%5-2,Math.floor(i/5)-2,zLayer+dz]));
+  const layerRelation=comparePatterns(layerValues(0),layerValues(1));
+  $('volume-votes').innerHTML=`<strong>${values.length} samples around (0, 0, ${zLayer})</strong><div class="voxel-votes">${values.map((v,i)=>`<span class="${v!==centerValue?'opposes':'agrees'} ${v>0?'one':'zero'} ${i===0?'center':''}" title="${i===0?'Selected center':v!==centerValue?'Opposes the center':'Agrees with the center'}"><small>${neighborLabels[i]}</small><b>${v>0?1:0}</b></span>`).join('')}</div><p>${opposing} of ${values.length} oppose the center: ${inLayer} in its layer, ${above} above, and ${below} below. ${Math.sign(values.reduce((s,v)=>s+v,0))!==centerValue?'The voxel flips.':'The voxel stays the same.'} Green borders mark opposing votes; orange marks the center.</p><p class="layer-relation">${layerRelation==='complement'?'The two adjacent layer crops have opposite colors at every position.':layerRelation==='identical'?'The two adjacent layer crops are identical.':'The two adjacent layer crops differ at some positions and agree at others.'} Off-layer samples have offsets ${neighbors.filter(a=>a[2]!==0).map(a=>'('+a.join(', ')+')').join(' and ')}.</p>`;
 }
 selector.onchange=load;
 $('next-flip').onclick=()=>{if(step<trace.flips.length){selected=trace.flips[step].t;step++;render();}};

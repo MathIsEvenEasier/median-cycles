@@ -1,0 +1,152 @@
+{
+  "status": "PASS",
+  "kind": "bounded example checks, not the general proof",
+  "fixture": {
+    "mask_pairs": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        -2,
+        -2,
+        1
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        2,
+        0
+      ],
+      [
+        2,
+        -2,
+        0
+      ]
+    ],
+    "coefficients": [
+      1,
+      5,
+      25
+    ],
+    "projected_offsets": [
+      1,
+      5,
+      13,
+      2,
+      10,
+      -8
+    ],
+    "period": 26,
+    "period_bound": 124,
+    "word": [
+      1,
+      -1,
+      -1,
+      1,
+      -1,
+      -1,
+      1,
+      -1,
+      -1,
+      1,
+      -1,
+      1,
+      1,
+      -1,
+      1,
+      1,
+      -1,
+      1,
+      1,
+      -1,
+      1,
+      1,
+      -1,
+      1,
+      -1,
+      -1
+    ],
+    "flips": [
+      {
+        "orbit": 1,
+        "before": 52,
+        "after": 56
+      },
+      {
+        "orbit": 2,
+        "before": 56,
+        "after": 60
+      },
+      {
+        "orbit": 4,
+        "before": 60,
+        "after": 64
+      },
+      {
+        "orbit": 5,
+        "before": 64,
+        "after": 68
+      },
+      {
+        "orbit": 7,
+        "before": 68,
+        "after": 72
+      },
+      {
+        "orbit": 8,
+        "before": 72,
+        "after": 76
+      },
+      {
+        "orbit": 10,
+        "before": 76,
+        "after": 84
+      }
+    ],
+    "flip_bound": 32,
+    "minimum_opposite_margin": 1
+  },
+  "phases_checked": 26,
+  "direct_coordinate_updates": 2,
+  "period_two_blocks_checked": 256,
+  "all_period_two_blocks_fixed": true,
+  "opposing_vote_counts": [
+    10,
+    8,
+    8,
+    10,
+    8,
+    8,
+    10,
+    8,
+    7,
+    9,
+    9,
+    7,
+    8,
+    10,
+    8,
+    8,
+    10,
+    8,
+    8,
+    10,
+    8,
+    7,
+    9,
+    9,
+    7,
+    8
+  ]
+}
