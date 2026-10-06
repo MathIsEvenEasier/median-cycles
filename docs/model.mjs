@@ -7,6 +7,14 @@ export const presets = [
   {name: 'Axis neighbors · 3D', pairs: [[1,0,0],[0,1,0],[0,0,1]]}
 ];
 export const mod = (a,n) => ((a%n)+n)%n;
+export function latticeValue(m,word,coordinates) {
+  return word[mod(coordinates.reduce((s,v,j)=>s+v*m.coefficients[j],0),m.N)];
+}
+export function comparePatterns(a,b) {
+  if(a.every((v,t)=>v===b[t])) return 'identical';
+  if(a.every((v,t)=>v===-b[t])) return 'complement';
+  return 'different';
+}
 export function setup(pairs) {
   const d=pairs[0].length, r=pairs.length, M=Math.max(...pairs.flat().map(Math.abs)), B=2*M+1;
   const coefficients=Array.from({length:d},(_,j)=>B**j);
