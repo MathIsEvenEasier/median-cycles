@@ -47,12 +47,12 @@ Proof
 Lean sources
 ------------
 
-``Projection.lean`` proves balanced-base injectivity.
-``Antipodal.lean`` proves the exact energy change and existence of a minimum.
-``Cyclic.lean`` constructs the antipodal state and applies the actual median.
-``Lattice.lean`` selects the extreme offset and proves the periodic pullback.
-``Result.lean`` states the genuine two-cycle, including its spatial-period bound.
-``FlipBound.lean`` proves the energy range, the exact drop of an improving
+`Projection.lean <formal/Projection.lean>`_ proves balanced-base injectivity.
+`Antipodal.lean <formal/Antipodal.lean>`_ proves the exact energy change and existence of a minimum.
+`Cyclic.lean <formal/Cyclic.lean>`_ constructs the antipodal state and applies the actual median.
+`Lattice.lean <formal/Lattice.lean>`_ selects the extreme offset and proves the periodic pullback.
+`Result.lean <formal/Result.lean>`_ states the genuine two-cycle, including its spatial-period bound.
+`FlipBound.lean <formal/FlipBound.lean>`_ proves the energy range, the exact drop of an improving
 flip, and the bound for any actual sequence of such flips. Its ``S.card``
 is the number r-1 of remaining offset pairs.
 
@@ -62,9 +62,16 @@ are exactly the standard ``propext``, ``Classical.choice``, and ``Quot.sound``.
 There are no project postulates, proof holes, native decision shortcuts,
 or unsafe declarations.
 
-The initial existence-only public build succeeded:
-https://github.com/MathIsEvenEasier/median-cycles/actions/runs/37494646351
-A new public build is being prepared for the extended statements.
+The public source build succeeded on 6 October 2026:
+`Lean verification run <https://github.com/MathIsEvenEasier/median-cycles/actions/runs/37496221585>`_.
+It checked commit ``96a4c670aae9285c8e78a290cd3897aece83a1e0``: seven
+positive modules compiled, ten named declarations passed the axiom audit,
+and the intentionally invalid proof was rejected as expected.
+
+`Permanent verification records <evidence/public-ci-2026-10-06/>`_ include
+the full theorem statements, compiler logs, source hashes, and provenance.
+The checked Lean sources are identified by ``evidence/source-manifest.json``;
+later documentation and evidence commits do not change those files.
 
 The primary endpoints are ``MedianCycles.periodic_median_two_cycle_bounded``
 and ``MedianCycles.cyclic_improving_flip_bound``. The build prints both

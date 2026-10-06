@@ -1,0 +1,66 @@
+[
+  {
+    "module": "Projection",
+    "exit_code": 0,
+    "log": "",
+    "expected_failure": false,
+    "source_sha256": "0f0f5c3113de26116984cb14f44b183052e4e460f6206391923507bd8e8cb8ff",
+    "seconds": 7.75
+  },
+  {
+    "module": "Antipodal",
+    "exit_code": 0,
+    "log": "",
+    "expected_failure": false,
+    "source_sha256": "238beb4e337bd4f2c21c7808e5060ccfb60b7ecd2233e6a43e9b7bb499844632",
+    "seconds": 2.742
+  },
+  {
+    "module": "Cyclic",
+    "exit_code": 0,
+    "log": "",
+    "expected_failure": false,
+    "source_sha256": "2e141a2fafdd84ab0092679804e0cebeaf153dc9d752b7c920fd9ee7f1586d81",
+    "seconds": 2.389
+  },
+  {
+    "module": "Lattice",
+    "exit_code": 0,
+    "log": "",
+    "expected_failure": false,
+    "source_sha256": "81521935423052e8f7de8194fde53e0f4936b9fb0d3d4aa0033f1bb51808972d",
+    "seconds": 3.843
+  },
+  {
+    "module": "Result",
+    "exit_code": 0,
+    "log": "",
+    "expected_failure": false,
+    "source_sha256": "cdce233931032f2c78aef593c2e6b0ad4812965250f78950c21116641063c6b9",
+    "seconds": 2.027
+  },
+  {
+    "module": "FlipBound",
+    "exit_code": 0,
+    "log": "",
+    "expected_failure": false,
+    "source_sha256": "956c1c4ab0a27caa44c34c4b01d42f93f6f54cde30c153913c77459eaf09edb7",
+    "seconds": 2.591
+  },
+  {
+    "module": "Audit",
+    "exit_code": 0,
+    "log": "'MedianCycles.encode_injective_box' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.energy_flip' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.exists_local_min' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.cyclic_two_cycle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.lattice_two_cycle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.periodic_median_two_cycle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.encode_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.periodic_median_two_cycle_bounded' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.total_flip' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MedianCycles.cyclic_improving_flip_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\nMedianCycles.periodic_median_two_cycle.{u_1} {d : \u2115} {I : Type u_1} [Fintype I] [DecidableEq I] [Nonempty I]\n  (a : I \u2192 Fin d \u2192 \u2124) (ha : \u2200 (i : I), a i \u2260 0) (hsep : \u2200 (i j : I), i \u2260 j \u2192 a i \u2260 a j \u2227 a i \u2260 -a j) :\n  \u2203 N x,\n    0 < N \u2227\n      (\u2200 (v w : Fin d \u2192 \u2124), x (v + N \u2022 w) = x v) \u2227\n        MedianCycles.median a x \u2260 x \u2227\n          MedianCycles.median a (MedianCycles.median a x) = x \u2227 MedianCycles.median a x = fun v => !x v\nMedianCycles.periodic_median_two_cycle_bounded.{u_1} {d : \u2115} {I : Type u_1} [Fintype I] [DecidableEq I] [Nonempty I]\n  (a : I \u2192 Fin d \u2192 \u2124) (M : \u2115) (hM : \u2200 (i : I) (j : Fin d), |a i j| \u2264 \u2191M) (ha : \u2200 (i : I), a i \u2260 0)\n  (hsep : \u2200 (i j : I), i \u2260 j \u2192 a i \u2260 a j \u2227 a i \u2260 -a j) :\n  \u2203 N x,\n    2 \u2264 N \u2227\n      N \u2264 (2 * M + 1) ^ d - 1 \u2227\n        (\u2200 (v w : Fin d \u2192 \u2124), x (v + N \u2022 w) = x v) \u2227\n          MedianCycles.median a x \u2260 x \u2227\n            MedianCycles.median a (MedianCycles.median a x) = x \u2227 MedianCycles.median a x = fun v => !x v\nMedianCycles.cyclic_improving_flip_bound.{u_1} {I : Type u_1} (p : \u2115) (hp : 0 < p) (S : Finset I) (q : I \u2192 ZMod (2 * p))\n  (hzero : \u2200 i \u2208 S, q i \u2260 0) (hanti : \u2200 i \u2208 S, q i \u2260 \u2191p) (y : \u2115 \u2192 MedianCycles.Anti \u2191p) (v : \u2115 \u2192 ZMod (2 * p)) (n : \u2115)\n  (hstep : \u2200 j < n, y (j + 1) = MedianCycles.flip \u2191p \u22ef (y j) (v j))\n  (himprove : \u2200 j < n, MedianCycles.cross (\u2191p) S q (y j) (v j) < S.card) : n \u2264 p * S.card / 2\n",
+    "expected_failure": false,
+    "source_sha256": "cadd53dfb03ed7be1a14bf6e6f1b157787894f0abcc6df42e8193fed71cc70f7",
+    "seconds": 1.973
+  },
+  {
+    "module": "NegativeControl",
+    "exit_code": 1,
+    "log": "/home/proofci/median-cycles-e0434b35b0164932/_work/_temp/mathlib/median-rebuild-output/NegativeControl.lean:3:19: error: Type mismatch\n  True.intro\nhas type\n  True\nbut is expected to have type\n  False\n",
+    "expected_failure": true,
+    "source_sha256": "2f516933a59a4daf1d68ee6e93dfda81108cc66ae658e0fe3da0ffbf558388e9",
+    "seconds": 1.946
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "repository": "MathIsEvenEasier/median-cycles",
+  "commit": "96a4c670aae9285c8e78a290cd3897aece83a1e0",
+  "run_url": "https://github.com/MathIsEvenEasier/median-cycles/actions/runs/37496221585",
+  "mathlib": "5ed2965256430c3649e86755f9576b54eca72435",
+  "lean": "4.34.0",
+  "memory_limit_bytes": 25769803776,
+  "status": "VERIFIED",
+  "source_sha256": {
+    "NegativeControl.lean": "2f516933a59a4daf1d68ee6e93dfda81108cc66ae658e0fe3da0ffbf558388e9",
+    "Projection.lean": "0f0f5c3113de26116984cb14f44b183052e4e460f6206391923507bd8e8cb8ff",
+    "Lattice.lean": "81521935423052e8f7de8194fde53e0f4936b9fb0d3d4aa0033f1bb51808972d",
+    "FlipBound.lean": "956c1c4ab0a27caa44c34c4b01d42f93f6f54cde30c153913c77459eaf09edb7",
+    "Antipodal.lean": "238beb4e337bd4f2c21c7808e5060ccfb60b7ecd2233e6a43e9b7bb499844632",
+    "Audit.lean": "cadd53dfb03ed7be1a14bf6e6f1b157787894f0abcc6df42e8193fed71cc70f7",
+    "Result.lean": "cdce233931032f2c78aef593c2e6b0ad4812965250f78950c21116641063c6b9",
+    "Cyclic.lean": "2e141a2fafdd84ab0092679804e0cebeaf153dc9d752b7c920fd9ee7f1586d81"
+  },
+  "final_theorem": "MedianCycles.periodic_median_two_cycle_bounded",
+  "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "flip_bound_theorem": "MedianCycles.cyclic_improving_flip_bound",
+  "flip_bound_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "seconds": 290.874
+}

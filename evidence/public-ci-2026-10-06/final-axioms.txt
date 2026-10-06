@@ -1,0 +1,15 @@
+'MedianCycles.periodic_median_two_cycle_bounded' depends on axioms: [propext, Classical.choice, Quot.sound]
+MedianCycles.periodic_median_two_cycle_bounded.{u_1} {d : ℕ} {I : Type u_1} [Fintype I] [DecidableEq I] [Nonempty I]
+  (a : I → Fin d → ℤ) (M : ℕ) (hM : ∀ (i : I) (j : Fin d), |a i j| ≤ ↑M) (ha : ∀ (i : I), a i ≠ 0)
+  (hsep : ∀ (i j : I), i ≠ j → a i ≠ a j ∧ a i ≠ -a j) :
+  ∃ N x,
+    2 ≤ N ∧
+      N ≤ (2 * M + 1) ^ d - 1 ∧
+        (∀ (v w : Fin d → ℤ), x (v + N • w) = x v) ∧
+          MedianCycles.median a x ≠ x ∧
+            MedianCycles.median a (MedianCycles.median a x) = x ∧ MedianCycles.median a x = fun v => !x v
+'MedianCycles.cyclic_improving_flip_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+MedianCycles.cyclic_improving_flip_bound.{u_1} {I : Type u_1} (p : ℕ) (hp : 0 < p) (S : Finset I) (q : I → ZMod (2 * p))
+  (hzero : ∀ i ∈ S, q i ≠ 0) (hanti : ∀ i ∈ S, q i ≠ ↑p) (y : ℕ → MedianCycles.Anti ↑p) (v : ℕ → ZMod (2 * p)) (n : ℕ)
+  (hstep : ∀ j < n, y (j + 1) = MedianCycles.flip ↑p ⋯ (y j) (v j))
+  (himprove : ∀ j < n, MedianCycles.cross (↑p) S q (y j) (v j) < S.card) : n ≤ p * S.card / 2
