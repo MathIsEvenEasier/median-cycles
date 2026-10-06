@@ -2,10 +2,26 @@ import {presets,setup,construct,crossing,cut,samples,median,mod} from './model.m
 const $=id=>document.getElementById(id);
 const svg=(tag,attrs,text)=>`<${tag} ${Object.entries(attrs).map(([k,v])=>`${k}="${v}"`).join(' ')}>${text??''}</${tag}>`;
 const sign=v=>v>0?'+':'−';
-let m,trace,step=0,selected=0,generation=0,heroWord;
+let m,trace,step=0,selected=0,generation=0,heroWord,pattern='constructed';
 const selector=$('preset');
 presets.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.name;selector.append(o);});
-function load(){m=setup(presets[+selector.value].pairs);trace=construct(m);step=0;generation=0;heroWord=trace.states.at(-1).slice();selected=trace.flips[0]?.t??0;renderProjection();render();renderImage();}
+const alternating=()=>Array.from({length:m.N},(_,t)=>t%2?-1:1);
+const inputWord=()=>pattern==='constructed'?trace.states.at(-1):alternating();
+function choosePattern(value){pattern=value;generation=0;heroWord=inputWord().slice();renderImage();}
+function load(){m=setup(presets[+selector.value].pairs);trace=construct(m);step=0;selected=trace.flips[0]?.t??0;renderProjection();render();renderComparison();choosePattern('constructed');}
+function voteRange(y){const counts=y.map((_,t)=>samples(m,y,t).filter(v=>v.value!==y[t]).length);return [Math.min(...counts),Math.max(...counts)];}
+function wordRows(id,y){
+  const next=median(m,y);
+  $(id).innerHTML=[['Input',y],['After median',next]].map(([label,word])=>`<div class="word-row"><span>${label}</span><div class="word-cells" style="grid-template-columns:repeat(${m.N},minmax(0,1fr))" role="img" aria-label="${label}: ${word.map(v=>v>0?1:0).join('')}">${word.map(v=>`<span class="${v<0?'minus':''}">${v>0?1:0}</span>`).join('')}</div></div>`).join('');
+}
+function renderComparison(){
+  const y=trace.states.at(-1),alt=alternating(),[min,max]=voteRange(y),[opposing]=voteRange(alt),total=2*m.r+1,works=opposing>=m.r+1;
+  $('hero-mask').textContent=`W = {0, ${m.pairs.map(a=>m.d===1?'±'+a[0]:'±('+a.join(', ')+')').join(', ')}}`;
+  $('comparison-explanation').textContent=m.d===1?`The selected filter reads the center and the pixels at distances ${m.pairs.map(a=>Math.abs(a[0])).join(', ')} in both directions. In an alternating input, an odd distance changes the color; an even distance preserves it.`:`In a checkerboard, an offset changes the color exactly when the sum of its coordinates is odd. Symmetry alone does not ensure that enough offsets change color. All base-B coefficients are odd, so the alternating projected word gives this same lattice checkerboard.`;
+  wordRows('alternating-rows',alt);wordRows('constructed-rows',y);
+  $('alternating-verdict').innerHTML=`<strong>${opposing} opposing votes out of ${total} at every pixel.</strong> ${works?'Here, alternation works: every pixel flips. Try “Offsets 1, 2, 4” to see where this shortcut fails.':`The ${total-opposing} votes agreeing with the center win. This input is a fixed point: no pixel changes.`}`;
+  $('constructed-verdict').innerHTML=`<strong>${min===max?min:`${min}–${max}`} opposing votes out of ${total} at every pixel.</strong> Every pixel has the required ${m.r+1} or more opposing votes. All pixels flip; applying the median again recovers the input.`;
+}
 function renderProjection(){
   $('projection-formula').textContent=`B = ${m.B}  ·  ℓ(v) = ${m.coefficients.map((c,j)=>`${c===1?'':c+'·'}v${'₀₁₂'[j]}`).join(' + ')}`;
   $('offset-table').innerHTML='<div class="offset-row offset-head"><span>offset a</span><span>ℓ(a)</span></div>'+m.pairs.map((a,i)=>`<div class="offset-row ${Math.abs(m.q[i])===m.p?'extreme':''}"><span>(${a.join(', ')})</span><span>${m.q[i]}</span></div>`).join('');
@@ -47,13 +63,21 @@ function renderImage(){
   const side=m.d===1?Math.max(8,m.N):m.N;
   $('picture').style.gridTemplateColumns=`repeat(${side},1fr)`;$('picture').replaceChildren();
   for(let j=0;j<side;j++)for(let i=0;i<side;i++){const t=mod(i+(m.coefficients[1]??0)*j,m.N);const cell=document.createElement('span');cell.className=heroWord[t]<0?'minus':'';$('picture').append(cell);}
-  $('hero-label').textContent=presets[+selector.value].name;$('generation').textContent=`${generation} · ${generation%2?'−x':'x'}`;
-  $('image-caption').textContent=`The completed witness, independent of the construction controls below. ${m.d===1?'Rows repeat a one-dimensional word.':m.d===3?'A z = 0 slice of the three-dimensional periodic image.':'One periodic tile of the two-dimensional image.'} Green = +1; cream = −1. N = ${m.N}.`;
-  $('picture').setAttribute('aria-label',`${presets[+selector.value].name} completed periodic witness, update ${generation}. Every pixel reverses on the next update.`);
+  const seed=inputWord(),next=median(m,heroWord),changed=next.filter((v,t)=>v!==heroWord[t]).length,same=heroWord.every((v,t)=>v===seed[t]);
+  $('hero-label').textContent=presets[+selector.value].name;$('generation').textContent=`${generation} · ${same?'input':'complement'}`;
+  $('hero-word').textContent=heroWord.map(v=>v>0?'1':'0').join('');
+  $('hero-outcome').textContent=changed===0?'No pixel changes. This input is a fixed point.':changed===m.N?'Every pixel flips. Two updates recover the input.':`${changed} of ${m.N} cycle positions change on the next update.`;
+  $('show-constructed').setAttribute('aria-pressed',String(pattern==='constructed'));$('show-alternating').setAttribute('aria-pressed',String(pattern==='alternating'));
+  $('image-caption').textContent=`${pattern==='constructed'?'The completed construction.':'The simple alternating input.'} ${m.d===1?'Rows repeat the same one-dimensional word.':m.d===3?'A z = 0 slice of the three-dimensional image.':'A tile of the periodic two-dimensional image.'} Green = 1; cream = 0. The word above lists the ${m.N} cycle positions. The construction controls below are separate.`;
+  $('picture').setAttribute('aria-label',`${presets[+selector.value].name}, ${pattern} input, update ${generation}. ${$('hero-outcome').textContent}`);
 }
 selector.onchange=load;
 $('next-flip').onclick=()=>{if(step<trace.flips.length){selected=trace.flips[step].t;step++;render();}};
 $('finish').onclick=()=>{step=trace.flips.length;render();};
 $('reset').onclick=()=>{step=0;selected=trace.flips[0]?.t??0;render();};
 $('median-step').onclick=()=>{heroWord=median(m,heroWord);generation++;renderImage();};
+$('show-constructed').onclick=()=>choosePattern('constructed');
+$('show-alternating').onclick=()=>choosePattern('alternating');
+$('try-constructed').onclick=()=>{choosePattern('constructed');$('show-constructed').focus();};
+$('try-alternating').onclick=()=>{choosePattern('alternating');$('show-alternating').focus();};
 load();
