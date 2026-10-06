@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "all_deleted": true,
+  "sessions": [
+    {
+      "job_id": "f9747d76cc0e469e",
+      "purpose": "development-initial",
+      "checked_at": "2026-10-06T16:21:36Z",
+      "group_exists": {
+        "compute": false,
+        "control": false
+      },
+      "resource_ids": [],
+      "all_deleted": true
+    },
+    {
+      "job_id": "2361d130a4e8491b",
+      "purpose": "public-initial",
+      "checked_at": "2026-10-06T16:31:21Z",
+      "group_exists": {
+        "compute": false,
+        "control": false
+      },
+      "resource_ids": [],
+      "all_deleted": true
+    },
+    {
+      "job_id": "c77175083eef449f",
+      "purpose": "development-quantitative",
+      "checked_at": "2026-10-06T16:34:22Z",
+      "group_exists": {
+        "compute": false,
+        "control": false
+      },
+      "resource_ids": [],
+      "all_deleted": true
+    },
+    {
+      "job_id": "e0434b35b0164932",
+      "purpose": "public-quantitative",
+      "checked_at": "2026-10-06T16:56:20Z",
+      "group_exists": {
+        "compute": false,
+        "control": false
+      },
+      "resource_ids": [],
+      "all_deleted": true
+    }
+  ],
+  "final_public_run": "https://github.com/MathIsEvenEasier/median-cycles/actions/runs/37496221585",
+  "cleanup_note": "The final compute-group deletion outlasted the controller wait. After ownership and downloaded results were verified, the completed VM and remaining network resources received direct deletion requests. Cleanup was resumed and both groups were confirmed absent."
+}

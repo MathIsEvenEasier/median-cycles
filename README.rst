@@ -91,7 +91,9 @@ proof is rejected.
 All compilation runs on a disposable Azure VM with a 24 GiB cgroup memory
 limit, no swap, a 115-minute worker limit, and an independent cloud deletion
 guard. The controller also collects results and verifies resource deletion.
-Workflow dispatch requires the unique label of a provisioned runner.
+`Cleanup receipts <evidence/azure-cleanup-2026-10-06.json>`_ confirm that
+all compute and control resources of the four verification sessions were
+deleted. Workflow dispatch requires the unique label of a provisioned runner.
 Scripts intentionally refuse a local full build.
 
 Practical use
