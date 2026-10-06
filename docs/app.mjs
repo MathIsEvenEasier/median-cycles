@@ -1,4 +1,4 @@
-import {presets,setup,construct,crossing,cut,samples,median,mod,latticeValue,comparePatterns,periodTwoObstruction} from './model.mjs';
+import {presets,setup,construct,crossing,cut,samples,median,mod,latticeValue,comparePatterns,periodTwoObstruction} from './model.mjs?v=a6e4cf7';
 const $=id=>document.getElementById(id);
 const svg=(tag,attrs,text)=>`<${tag} ${Object.entries(attrs).map(([k,v])=>`${k}="${v}"`).join(' ')}>${text??''}</${tag}>`;
 const sign=v=>v>0?'+':'−';
