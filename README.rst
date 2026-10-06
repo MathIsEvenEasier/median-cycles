@@ -5,6 +5,10 @@ Every nontrivial centered symmetric finite mask on an integer lattice
 admits a periodic binary image which changes every pixel at each
 synchronous median update. Applying the filter twice recovers the image.
 
+`Interactive proof <https://mathiseveneasier.github.io/median-cycles/>`_
+shows the projection, antipodal improvements, sample votes, and periodic
+image. Its small browser examples are an illustration of the general proof.
+
 This repository records the centered symmetric periodic case of the
 median-cycle question. It does not characterize asymmetric masks, settle
 Klette's full Problem 3, or guarantee a cycle on every prescribed image
