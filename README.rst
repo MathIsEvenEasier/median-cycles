@@ -63,7 +63,7 @@ Lean sources
 `Antipodal.lean <formal/Antipodal.lean>`_ proves the exact energy change and existence of a minimum.
 `Cyclic.lean <formal/Cyclic.lean>`_ constructs the antipodal state and applies the actual median.
 `Lattice.lean <formal/Lattice.lean>`_ selects the extreme offset and proves the periodic pullback.
-`Result.lean <formal/Result.lean>`_ states the genuine two-cycle, including its spatial-period bound.
+`Result.lean <formal/Result.lean>`_ states the two-cycle theorem, including its spatial-period bound.
 `FlipBound.lean <formal/FlipBound.lean>`_ proves the energy range, the exact drop of an improving
 flip, and the bound for any actual sequence of such flips. Its ``S.card``
 is the number r-1 of remaining offset pairs.
@@ -125,7 +125,7 @@ Provenance and references
 
 The antipodal-cut construction comes from the supplied research archive
 of 21 August 2026. The October revision gives an elementary projection
-argument, quantitative bounds, and an end-to-end formalization project.
+argument, quantitative bounds, and a Lean formalization.
 Prepared with OpenAI Codex (GPT-6 Astra).
 
 * R. Klette (compiler), Open Problems in (Digital) Geometry, Dagstuhl,
@@ -136,5 +136,4 @@ Prepared with OpenAI Codex (GPT-6 Astra).
   https://arxiv.org/html/2309.01854v3
 
 The classical period-at-most-two result for symmetric threshold dynamics
-is background. Our existence claim for all masks in the stated class is
-not accompanied by a claim of priority or independent expert review.
+is background. Independent expert review of this construction is pending.

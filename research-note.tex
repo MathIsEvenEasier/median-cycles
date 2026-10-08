@@ -17,9 +17,9 @@
 We revisit the August 2026 archived antipodal-cut construction for
 nontrivial centered symmetric median masks on $\Z^d$. Its convex-geometric
 separation step can be replaced by a balanced-base encoding of integer
-coordinates. This gives a complete elementary proof and an explicit bound
-on a spatial period. The existence statement, explicit spatial-period bound, and improving-flip
-bound are formalized in Lean 4. Literature priority remains unconfirmed.
+coordinates. This gives a proof using integer arithmetic and an explicit bound
+on a spatial period. The existence statement, spatial-period bound, and
+improving-flip bound are formalized in Lean 4. Literature priority remains unconfirmed.
 \end{abstract}
 
 \section{Statement and scope}
@@ -43,7 +43,7 @@ $M\ge1$, then a common coordinate period $N$ can be chosen with
 \[
              2\le N\le (2M+1)^d-1.
 \]
-Thus $x,-x$ form a genuine temporal two-cycle.
+Thus $x,-x$ form a temporal two-cycle.
 \end{theorem}
 
 The period $N$ need not be minimal. The theorem concerns existence on
@@ -152,9 +152,8 @@ also detects the cycles, although it does not by itself select a preferred
 denoised image.
 
 \section{Known upper bound on temporal periods}
-The classical symmetric-threshold period-two phenomenon is background,
-not a new result of this note; see, for example, the discussion and
-references in~\cite{goles}. For completeness, on any fixed finite torus
+The classical symmetric-threshold period-two theorem is discussed
+in~\cite{goles}. Its argument on a finite torus is as follows:
 let $A$ be the symmetric sample-count matrix and put $x_{t+1}=\sgn(Ax_t)$.
 The integer energy $E_t=x_{t+1}^{T}Ax_t$ satisfies
 \[
@@ -172,10 +171,8 @@ The antipodal-cut existence argument comes from the supplied research
 archive dated 21 August 2026. This revision replaces its convex-geometric
 projection step by Lemma~\ref{lem:encode}, extracts the explicit spatial
 period and flip-count bounds, and clarifies the finite-image conventions.
-These are refinements of that argument, not a claim to have discovered
-the archived existence theorem today.
 
-The new Lean development proves the existence statement end to end,
+The Lean development proves the existence theorem
 starting with integer-lattice offsets. It checks balanced-base injectivity,
 the exact antipodal energy change, a finite minimizing coloring, the cyclic
 median update, and the periodic lattice pullback. The endpoint
@@ -202,8 +199,8 @@ supply the arbitrary-mask lattice construction in its inspected results.
 A recent complexity preprint~\cite{jain} was screened at abstract level
 only; its full text was not retrieved. A bounded search across related
 terminology and indexed GitHub, X, and VibeMathed results did not locate
-this exact universal theorem. This is not evidence sufficient to establish
-priority, nor an independent expert review.
+this exact universal theorem. Literature priority remains unconfirmed;
+independent expert review is pending.
 
 \begin{thebibliography}{9}
 \bibitem{klette} R. Klette (compiler), \emph{Open Problems in (Digital)
