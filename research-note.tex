@@ -10,16 +10,18 @@
 \title{Periodic two-cycles for every symmetric median mask\\
 \large An elementary projection and an explicit period bound}
 \author{MathIsEvenEasier\\\small Prepared with OpenAI Codex (GPT-6 Astra)}
-\date{6 October 2026 --- research draft}
+\date{6 October 2026; exposition revised 9 October 2026}
 \begin{document}
 \maketitle
 \begin{abstract}
-We revisit the August 2026 archived antipodal-cut construction for
-nontrivial centered symmetric median masks on $\Z^d$. Its convex-geometric
-separation step can be replaced by a balanced-base encoding of integer
-coordinates. This gives a proof using integer arithmetic and an explicit bound
-on a spatial period. The existence statement, spatial-period bound, and
-improving-flip bound are formalized in Lean 4. Literature priority remains unconfirmed.
+Every nontrivial, centered, symmetric median mask on $\mathbb Z^d$
+admits a periodic binary image whose signs all reverse after one update.
+If the mask offsets lie in $[-M,M]^d$, the image can have a common
+coordinate period at most $(2M+1)^d-1$. The construction projects the
+mask onto a finite cycle and chooses an antipodal coloring stable under
+improving pair flips. A local count then gives a strict opposing majority
+at every pixel. The existence theorem, spatial-period bound and bound on
+the number of improving flips are formalized in Lean 4.
 \end{abstract}
 
 \section{Statement and scope}
@@ -52,6 +54,12 @@ It makes no assertion for every prescribed image size, asymmetric masks,
 weighted masks, or fixed-zero, reflected, or replicated boundary rules.
 It addresses the centered-symmetric, periodic subclass of Klette's
 Problem 3~\cite{klette}, rather than the entire characterization question.
+
+The largest projected offset will give two samples of the opposite
+sign at every pixel. The remaining offsets need contribute only half
+opposite signs. We obtain that local balance by maximizing a cut subject
+to antipodal symmetry. The projection lemma ensures that no other offset
+becomes a loop or an antipodal edge, which makes the pair-flip count valid.
 
 \section{The elementary projection}
 \begin{lemma}\label{lem:encode}
